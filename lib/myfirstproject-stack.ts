@@ -9,6 +9,7 @@ export class MyfirstprojectStack extends cdk.Stack {
 
     const vpc = new ec2.Vpc(this, "Vpc", {
       //cidr: '10.0.0.0/16',
+      maxAzs: 1,
       
       subnetConfiguration: [
         {
@@ -27,7 +28,7 @@ export class MyfirstprojectStack extends cdk.Stack {
     });
     */
 
-    const acl = new NetworkAcl(this, "Acl", {vpc: vpc,});
+    const acl = new NetworkAcl(this, "Acl", {vpc: vpc, subnetSelection: { subnetGroupName: 'Ingress'}});
 
     acl.addEntry('SSHEgress', {
       cidr: AclCidr.anyIpv4(),
@@ -43,43 +44,43 @@ export class MyfirstprojectStack extends cdk.Stack {
     })
     acl.addEntry('HTTPEgress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 2,
       traffic: AclTraffic.tcpPort(80), 
       direction: TrafficDirection.EGRESS,
     })
     acl.addEntry('HTTPIngress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 2,
       traffic: AclTraffic.tcpPort(80), 
       direction: TrafficDirection.INGRESS,
     })
     acl.addEntry('HTTPSEgress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 3,
       traffic: AclTraffic.tcpPort(443), 
       direction: TrafficDirection.EGRESS
     })
     acl.addEntry('HTTPSIngress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 3,
       traffic: AclTraffic.tcpPort(443), 
       direction: TrafficDirection.INGRESS
     })
     acl.addEntry('EphemeralEgress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 4,
       traffic: AclTraffic.tcpPortRange(1024, 65535), 
       direction: TrafficDirection.EGRESS 
     })
     acl.addEntry('EphemeralIngress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 4,
       traffic: AclTraffic.tcpPortRange(1024, 65535), 
       direction: TrafficDirection.INGRESS
     })
     acl.addEntry('SMTPEngress', {
       cidr: AclCidr.anyIpv4(),
-      ruleNumber: 1,
+      ruleNumber: 5,
       traffic: AclTraffic.tcpPort(465), 
       direction: TrafficDirection.EGRESS 
     })
